@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Islamic Prayer Times - Kannur, Kerala</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a5f7a 0%, #159895 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .header {
+            background: linear-gradient(to right, #1a5f7a, #159895);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .location {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        
+        .date-display {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .hijri-date {
+            background: rgba(255, 255, 255, 0.15);
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .current-time {
+            background: white;
+            color: #1a5f7a;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .prayer-times {
+            padding: 20px;
+        }
+        
+        .prayer-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            border-radius: 15px;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .prayer-card.active {
+            background: linear-gradient(to right, #1a5f7a, #159895);
+            color: white;
+            transform: scale(1.02);
+        }
+        
+        .prayer-card.next {
+            border: 2px solid #1a5f7a;
+        }
+        
+        .prayer-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .prayer-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(26, 95, 122, 0.1);
+            color: #1a5f7a;
+        }
+        
+        .active .prayer-icon {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .prayer-name {
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+        
+        .prayer-time {
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+        
+        .countdown {
+            background: #ff6b6b;
+            color: white;
+            font-size: 0.9rem;
+            padding: 4px 10px;
+            border-radius: 12px;
+            margin-top: 5px;
+            display: inline-block;
+        }
+        
+        .progress-container {
+            height: 5px;
+            background: #e9ecef;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, #1a5f7a, #159895);
+            border-radius: 5px;
+            width: 35%;
+        }
+        
+        .footer {
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #e9ecef;
+            color: #6c757d;
+            font-size: 0.85rem;
+        }
+        
+        .calculation-method {
+            margin-top: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: none;
+            background: #f8f9fa;
+            color: #1a5f7a;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn:hover {
+            background: #e9ecef;
+        }
+        
+        .btn-primary {
+            background: #1a5f7a;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #164c63;
+        }
+        
+        @media (max-width: 500px) {
+            .header {
+                padding: 20px 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .prayer-card {
+                padding: 12px 15px;
+            }
+            
+            .prayer-time {
+                font-size: 1.1rem;
+            }
+            
+            .current-time {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-top: 10px;
+                display: inline-block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Prayer Times</h1>
+            <div class="location">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Kannur, Kerala</span>
+            </div>
+            <div class="date-display" id="current-date">Thursday, August 28, 2025</div>
+            <div class="hijri-date" id="hijri-date">3 Safar 1447 AH</div>
+            <div class="current-time" id="current-time">11:45 AM</div>
+        </div>
+        
+        <div class="prayer-times">
+            <div class="prayer-card" id="fajr-card">
+                <div class="prayer-info">
+                    <div class="prayer-icon">
+                        <i class="fas fa-moon"></i>
+                    </div>
+                    <div>
+                        <div class="prayer-name">Fajr</div>
+                        <div class="countdown" id="fajr-countdown">Prayed</div>
+                    </div>
+                </div>
+                <div class="prayer-time" id="fajr-time">5:06 AM</div>
+            </div>
+            
+            <div class="prayer-card" id="sunrise-card">
+                <div class="prayer-info">
+                    <div class="prayer-icon">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <div>
+                        <div class="prayer-name">Sunrise</div>
+                    </div>
+                </div>
+                <div class="prayer-time" id="sunrise-time">6:18 AM</div>
+            </div>
+            
+            <div class="prayer-card" id="dhuhr-card">
+                <div class="prayer-info">
+                    <div class="prayer-icon">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <div>
+                        <div class="prayer-name">Dhuhr</div>
+                    </div>
+                </div>
+                <div class="prayer-time" id="dhuhr-time">12:30 PM</div>
+            </div>
+            
+            <div class="prayer-card" id="asr-card">
+                <div class="prayer-info">
+                    <div class="prayer-icon">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <div>
+                        <div class="prayer-name">Asr</div>
+                    </div>
+                </div>
+                <div class="prayer-time" id="asr-time">3:38 PM</div>
+            </div>
+            
+            <div class="prayer-card" id="maghrib-card">
+                <div class="prayer-info">
+                    <div class="prayer-icon">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <div>
+                        <div class="prayer-name">Maghrib</div>
+                    </div>
+                </div>
+                <div class="prayer-time" id="maghrib-time">6:41 PM</div>
+            </div>
+            
+            <div class="prayer-card" id="isha-card">
+                <div class="prayer-info">
+                    <div class="prayer-icon">
+                        <i class="fas fa-moon"></i>
+                    </div>
+                    <div>
+                        <div class="prayer-name">Isha</div>
+                    </div>
+                </div>
+                <div class="prayer-time" id="isha-time">7:53 PM</div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div>Based on: University of Islamic Sciences, Karachi</div>
+            <div class="calculation-method">Calculation Method: Muslim World League · Angle: 18°/18°</div>
+            <div class="actions">
+                <button class="btn">
+                    <i class="fas fa-cog"></i> Settings
+                </button>
+                <button class="btn btn-primary">
+                    <i class="fas fa-location-dot"></i> Change Location
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Prayer times for Kannur, Kerala (example data)
+        const prayerTimes = {
+            fajr: "5:06 AM",
+            sunrise: "6:18 AM",
+            dhuhr: "12:30 PM",
+            asr: "3:38 PM",
+            maghrib: "6:41 PM",
+            isha: "7:53 PM"
+        };
+        
+        // Convert time string to minutes since midnight
+        function timeToMinutes(timeStr) {
+            const [time, modifier] = timeStr.split(" ");
+            let [hours, minutes] = time.split(":").map(Number);
+            
+            if (modifier === "PM" && hours !== 12) {
+                hours += 12;
+            } else if (modifier === "AM" && hours === 12) {
+                hours = 0;
+            }
+            
+            return hours * 60 + minutes;
+        }
+        
+        // Format minutes to HH:MM AM/PM
+        function minutesToTime(minutes) {
+            let hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            const modifier = hours >= 12 ? "PM" : "AM";
+            
+            hours = hours % 12;
+            hours = hours === 0 ? 12 : hours;
+            
+            return `${hours}:${mins.toString().padStart(2, '0')} ${modifier}`;
+        }
+        
+        // Calculate time until next prayer
+        function calculateTimeUntilPrayer(currentMinutes, prayerMinutes) {
+            if (prayerMinutes < currentMinutes) {
+                // Prayer is tomorrow
+                prayerMinutes += 24 * 60;
+            }
+            
+            const diff = prayerMinutes - currentMinutes;
+            const hours = Math.floor(diff / 60);
+            const minutes = diff % 60;
+            
+            if (hours > 0) {
+                return `${hours}h ${minutes}m`;
+            } else {
+                return `${minutes}m`;
+            }
+        }
+        
+        // Update current time and date
+        function updateDateTime() {
+            const now = new Date();
+            
+            // Update current time
+            const timeOptions = { hour: 'numeric', minute: 'numeric', hour12: true };
+            document.getElementById('current-time').textContent = now.toLocaleTimeString('en-US', timeOptions);
+            
+            // Update date
+            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', dateOptions);
+            
+            // Calculate current minutes
+            const currentMinutes = now.getHours() * 60 + now.getMinutes();
+            
+            // Convert prayer times to minutes
+            const prayerMinutes = {
+                fajr: timeToMinutes(prayerTimes.fajr),
+                sunrise: timeToMinutes(prayerTimes.sunrise),
+                dhuhr: timeToMinutes(prayerTimes.dhuhr),
+                asr: timeToMinutes(prayerTimes.asr),
+                maghrib: timeToMinutes(prayerTimes.maghrib),
+                isha: timeToMinutes(prayerTimes.isha)
+            };
+            
+            // Determine current and next prayer
+            let currentPrayer = null;
+            let nextPrayer = null;
+            
+            // Check which prayer we're currently in
+            if (currentMinutes >= prayerMinutes.fajr && currentMinutes < prayerMinutes.sunrise) {
+                currentPrayer = "fajr";
+                nextPrayer = "sunrise";
+            } else if (currentMinutes >= prayerMinutes.sunrise && currentMinutes < prayerMinutes.dhuhr) {
+                currentPrayer = "sunrise";
+                nextPrayer = "dhuhr";
+            } else if (currentMinutes >= prayerMinutes.dhuhr && currentMinutes < prayerMinutes.asr) {
+                currentPrayer = "dhuhr";
+                nextPrayer = "asr";
+            } else if (currentMinutes >= prayerMinutes.asr && currentMinutes < prayerMinutes.maghrib) {
+                currentPrayer = "asr";
+                nextPrayer = "maghrib";
+            } else if (currentMinutes >= prayerMinutes.maghrib && currentMinutes < prayerMinutes.isha) {
+                currentPrayer = "maghrib";
+                nextPrayer = "isha";
+            } else if (currentMinutes >= prayerMinutes.isha || currentMinutes < prayerMinutes.fajr) {
+                currentPrayer = "isha";
+                nextPrayer = "fajr";
+            }
+            
+            // Update prayer cards
+            document.querySelectorAll('.prayer-card').forEach(card => {
+                card.classList.remove('active', 'next');
+            });
+            
+            if (currentPrayer) {
+                document.getElementById(`${currentPrayer}-card`).classList.add('active');
+            }
+            
+            if (nextPrayer) {
+                document.getElementById(`${nextPrayer}-card`).classList.add('next');
+                
+                // Update countdown for next prayer
+                const nextPrayerTime = prayerMinutes[nextPrayer];
+                const countdownText = calculateTimeUntilPrayer(currentMinutes, nextPrayerTime);
+                document.getElementById(`${nextPrayer}-countdown`).textContent = `Next: ${countdownText}`;
+            }
+            
+            // Update progress bar (percentage of day completed)
+            const dayProgress = (currentMinutes / (24 * 60)) * 100;
+            document.getElementById('progress-bar').style.width = `${dayProgress}%`;
+            
+            // Update hijri date (simplified calculation)
+            updateHijriDate(now);
+        }
+        
+        // Simplified hijri date calculation (for demonstration only)
+        function updateHijriDate(gregorianDate) {
+            // This is a very simplified conversion for demonstration only
+            // In a real application, you would use a proper hijri date conversion library
+            
+            const hijriMonths = ['Muharram', 'Safar', 'Rabi al-Awwal', 'Rabi al-Thani', 
+                                'Jumada al-Awwal', 'Jumada al-Thani', 'Rajab', 'Sha\'ban', 
+                                'Ramadan', 'Shawwal', 'Dhu al-Qidah', 'Dhu al-Hijjah'];
+            
+            // Approximate calculation (this is not astronomically accurate)
+            const hijriYear = 1446 + Math.floor((gregorianDate - new Date(2025, 0, 1)) / (365.25 * 1000 * 60 * 60 * 24));
+            const hijriMonth = hijriMonths[gregorianDate.getMonth()];
+            const hijriDay = (gregorianDate.getDate() % 29) + 1;
+            
+            document.getElementById('hijri-date').textContent = `${hijriDay} ${hijriMonth} ${hijriYear} AH`;
+        }
+        
+        // Initial call
+        updateDateTime();
+        
+        // Update time every minute
+        setInterval(updateDateTime, 60000);
+        
+        // Add click event to prayer cards
+        document.querySelectorAll('.prayer-card').forEach(card => {
+            card.addEventListener('click', () => {
+                document.querySelectorAll('.prayer-card').forEach(c => {
+                    c.classList.remove('active');
+                });
+                card.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
